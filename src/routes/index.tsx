@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -122,13 +122,13 @@ function Nav() {
           <a href="#faq" className="transition hover:text-foreground">FAQ</a>
         </nav>
         <div className="flex items-center gap-2">
-          <button className="hidden rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground md:inline-flex">
+          <Link to="/auth" className="hidden rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground md:inline-flex">
             Sign in
-          </button>
-          <button className="group inline-flex items-center gap-1 rounded-full bg-[image:var(--gradient-primary)] px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
+          </Link>
+          <Link to="/auth" className="group inline-flex items-center gap-1 rounded-full bg-[image:var(--gradient-primary)] px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
             Get started
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-          </button>
+          </Link>
         </div>
       </div>
     </header>
@@ -172,14 +172,14 @@ function Hero() {
             storytelling, image enhancement, and commerce tools — in your language, in minutes.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <button className="group inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-primary)] px-6 py-3 text-base font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
+            <Link to="/auth" className="group inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-primary)] px-6 py-3 text-base font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
               Get started free
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </button>
-            <button className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-surface">
+            </Link>
+            <a href="#how" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-surface">
               <PlayCircle className="h-5 w-5 text-secondary" />
               Watch demo
-            </button>
+            </a>
           </motion.div>
           <motion.p variants={fadeUp} className="mt-4 text-xs text-muted-foreground">
             No credit card · Free for first 50 listings · 14 regional languages
@@ -690,10 +690,10 @@ function CTA() {
             </p>
           </div>
           <div className="flex flex-col gap-3 md:items-end">
-            <button className="inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-primary)] px-6 py-3 text-base font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
+            <Link to="/auth" className="inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-primary)] px-6 py-3 text-base font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
               Start selling free
               <ArrowRight className="h-4 w-4" />
-            </button>
+            </Link>
             <button className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-sm text-foreground transition hover:bg-surface">
               Book a 1:1 onboarding call
             </button>
