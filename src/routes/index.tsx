@@ -1,29 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  Sparkles,
-  Upload,
-  Wand2,
-  Store,
-  Mic,
-  Languages,
-  Boxes,
-  Truck,
-  ShieldCheck,
-  Image as ImageIcon,
-  ScrollText,
-  Tags,
-  ArrowRight,
-  PlayCircle,
-  Star,
-  Plus,
-  Minus,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Github,
+  Sparkles, Upload, Wand2, Store, Mic, Languages,
+  Boxes, Truck, ShieldCheck, Image as ImageIcon,
+  ScrollText, Tags, ArrowRight, PlayCircle, Star,
+  Plus, Minus, Instagram, Twitter, Linkedin, Github
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import heroImg from "@/assets/hero-artisan.jpg";
 import artisan1 from "@/assets/artisan-1.jpg";
 import artisan2 from "@/assets/artisan-2.jpg";
@@ -32,67 +15,49 @@ import artisan3 from "@/assets/artisan-3.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kalamitra — Where Tradition Meets Technology" },
-      {
-        name: "description",
-        content:
-          "AI-powered commerce platform empowering India's artisans, potters, weavers, and craftsmen to sell beautifully online.",
-      },
-      { property: "og:title", content: "Kalamitra — Where Tradition Meets Technology" },
-      {
-        property: "og:description",
-        content:
-          "Turn a single photo into a professional listing with AI image enhancement, storytelling, and SEO — built for India's artisans.",
-      },
+      { title: "Kalamitra — Premium AI Commerce" },
+      { name: "description", content: "Empowering India's artisans with next-generation AI tools." },
     ],
   }),
   component: Landing,
 });
 
-/* ---------- shared ---------- */
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] as const } },
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
 
 function Section({
-  id,
-  eyebrow,
-  title,
-  description,
-  children,
-  className = "",
+  id, eyebrow, title, description, children, className = "",
 }: {
-  id?: string;
-  eyebrow?: string;
-  title?: React.ReactNode;
-  description?: string;
-  children: React.ReactNode;
-  className?: string;
+  id?: string; eyebrow?: string; title?: React.ReactNode; description?: string; children: React.ReactNode; className?: string;
 }) {
   return (
-    <section id={id} className={`relative px-6 py-24 md:py-32 ${className}`}>
-      <div className="mx-auto max-w-7xl">
+    <section id={id} className={`relative px-6 py-24 md:py-32 overflow-hidden ${className}`}>
+      <div className="mx-auto max-w-7xl relative z-10">
         {(eyebrow || title) && (
           <motion.div
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
-            className="mx-auto mb-16 max-w-2xl text-center"
+            className="mx-auto mb-16 max-w-3xl text-center"
           >
             {eyebrow && (
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-widest text-primary-glow">
-                <Sparkles className="h-3 w-3" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-glow backdrop-blur-md">
+                <Sparkles className="h-3.5 w-3.5" />
                 {eyebrow}
               </span>
             )}
             {title && (
-              <h2 className="mt-5 text-4xl font-medium md:text-5xl">{title}</h2>
+              <h2 className="mt-6 font-display text-4xl font-bold tracking-tight md:text-6xl text-foreground">
+                {title}
+              </h2>
             )}
             {description && (
-              <p className="mt-4 text-base text-muted-foreground md:text-lg">{description}</p>
+              <p className="mt-6 text-lg text-muted-foreground md:text-xl leading-relaxed">
+                {description}
+              </p>
             )}
           </motion.div>
         )}
@@ -102,217 +67,194 @@ function Section({
   );
 }
 
-/* ---------- nav ---------- */
-
 function Nav() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl glass px-4 py-3 md:px-6">
-        <a href="#" className="flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[image:var(--gradient-primary)] shadow-[var(--shadow-glow)]">
-            <span className="font-display text-lg font-bold text-primary-foreground">K</span>
-          </span>
-          <span className="font-display text-lg font-semibold tracking-tight">Kalamitra</span>
-        </a>
-        <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-          <a href="#how" className="transition hover:text-foreground">How it works</a>
-          <a href="#features" className="transition hover:text-foreground">Features</a>
-          <a href="#ai" className="transition hover:text-foreground">AI Studio</a>
-          <a href="#stories" className="transition hover:text-foreground">Stories</a>
-          <a href="#faq" className="transition hover:text-foreground">FAQ</a>
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        scrolled ? "bg-background/70 backdrop-blur-2xl border-b border-white/5 py-3 shadow-2xl" : "bg-transparent py-6"
+      } px-6`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <Link to="/" className="group flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-premium transition-transform duration-300 group-hover:scale-105">
+            <span className="font-display text-xl font-bold text-primary-foreground">K</span>
+          </div>
+          <span className="font-display text-xl font-semibold tracking-tight">Kalamitra</span>
+        </Link>
+        <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
+          {['Features', 'Stories'].map((item) => (
+            <a key={item} href={`#${item.toLowerCase().replace(' ', '')}`} className="transition-colors hover:text-foreground">
+              {item}
+            </a>
+          ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <Link to="/auth" className="hidden rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground md:inline-flex">
+        <div className="flex items-center gap-4">
+          <Link to="/auth" className="hidden text-sm font-medium text-muted-foreground transition hover:text-foreground md:block">
             Sign in
           </Link>
-          <Link to="/auth" className="group inline-flex items-center gap-1 rounded-full bg-[image:var(--gradient-primary)] px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
-            Get started
-            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+          <Link to="/auth" className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
+            <span className="relative z-10">Get Started</span>
+            <ArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity duration-500 group-hover:opacity-10" />
           </Link>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
 
-/* ---------- hero ---------- */
-
 function Hero() {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+
   return (
-    <section className="relative overflow-hidden px-6 pb-12 pt-36 md:pt-44">
-      <div className="absolute inset-0 -z-10 grid-bg opacity-40" />
-      <div className="absolute left-1/2 top-20 -z-10 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-primary/20 blur-[140px]" />
+    <section className="relative min-h-screen pt-32 md:pt-48 pb-20 overflow-hidden flex flex-col items-center">
+      {/* Animated abstract background elements */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-10000" />
+      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-accent/15 rounded-full blur-[150px] mix-blend-screen animate-pulse duration-7000 delay-1000" />
 
-      <div className="mx-auto max-w-7xl">
+      <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]" />
+
+      <motion.div style={{ y: y1, opacity }} className="relative z-10 mx-auto max-w-5xl px-6 text-center">
         <motion.div
-          initial="hidden"
-          animate="show"
-          variants={{ show: { transition: { staggerChildren: 0.08 } } }}
-          className="mx-auto max-w-4xl text-center"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold tracking-widest text-foreground backdrop-blur-md mb-8 shadow-2xl"
         >
-          <motion.span
-            variants={fadeUp}
-            className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-medium uppercase tracking-widest text-secondary"
-          >
-            <Sparkles className="h-3 w-3" />
-            Built for Bharat · Powered by AI
-          </motion.span>
-          <motion.h1
-            variants={fadeUp}
-            className="mt-6 text-balance text-5xl font-medium leading-[1.05] md:text-7xl lg:text-[5.5rem]"
-          >
-            Empowering India's <br />
-            <span className="text-gradient">artisans through AI</span>
-          </motion.h1>
-          <motion.p
-            variants={fadeUp}
-            className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground md:text-xl"
-          >
-            Transform handmade craft into professional online listings with AI-powered
-            storytelling, image enhancement, and commerce tools — in your language, in minutes.
-          </motion.p>
-          <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/auth" className="group inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-primary)] px-6 py-3 text-base font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
-              Get started free
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </Link>
-            <a href="#how" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-surface">
-              <PlayCircle className="h-5 w-5 text-secondary" />
-              Watch demo
-            </a>
-          </motion.div>
-          <motion.p variants={fadeUp} className="mt-4 text-xs text-muted-foreground">
-            No credit card · Free for first 50 listings · 14 regional languages
-          </motion.p>
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+          </span>
+          Kalamitra AI 2.0 is now live
         </motion.div>
-
-        {/* Hero composite */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
+        
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
-          className="relative mx-auto mt-16 max-w-6xl"
+          transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display text-5xl font-bold tracking-tight md:text-[5.5rem] leading-[1.05]"
         >
-          <div className="relative overflow-hidden rounded-3xl glass-strong p-3 shadow-[var(--shadow-card)]">
-            <div className="relative overflow-hidden rounded-2xl">
-              <img
-                src={heroImg}
-                alt="Handcrafted Indian artisan products"
-                width={1536}
-                height={1152}
-                className="h-auto w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-            </div>
-
-            {/* Floating cards */}
-            <FloatingCard
-              className="absolute -left-4 top-10 md:-left-12 md:top-20"
-              delay={0.6}
-            >
-              <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-lg bg-accent/20">
-                  <Wand2 className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">AI generated</p>
-                  <p className="text-sm font-medium">Listing ready in 14s</p>
-                </div>
-              </div>
-            </FloatingCard>
-
-            <FloatingCard
-              className="absolute -right-4 bottom-16 md:-right-10 md:bottom-24"
-              delay={0.9}
-            >
-              <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-lg bg-secondary/20">
-                  <Star className="h-5 w-5 fill-secondary text-secondary" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">First sale</p>
-                  <p className="text-sm font-medium">+₹1,240 · Diya set</p>
-                </div>
-              </div>
-            </FloatingCard>
-
-            <FloatingCard
-              className="absolute right-6 top-8 md:right-16 md:top-14"
-              delay={1.1}
-            >
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-                </span>
-                <p className="text-xs font-medium">2,431 artisans online</p>
-              </div>
-            </FloatingCard>
-          </div>
-
-          {/* Trust strip */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-xs uppercase tracking-widest text-muted-foreground/70">
-            <span>Featured in</span>
-            <span className="font-display text-base normal-case tracking-normal text-muted-foreground">YourStory</span>
-            <span className="font-display text-base normal-case tracking-normal text-muted-foreground">Inc42</span>
-            <span className="font-display text-base normal-case tracking-normal text-muted-foreground">The Hindu</span>
-            <span className="font-display text-base normal-case tracking-normal text-muted-foreground">ET Prime</span>
-            <span className="font-display text-base normal-case tracking-normal text-muted-foreground">Mint</span>
-          </div>
+          Scale your craft.<br />
+          <span className="text-gradient">Powered by intelligence.</span>
+        </motion.h1>
+        
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground md:text-xl leading-relaxed"
+        >
+          Turn a single photo into a professional storefront. Our AI agent writes your story, enhances images, and manages inventory automatically.
+        </motion.p>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <Link to="/auth" className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-foreground px-8 py-4 text-base font-semibold text-background transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
+            <span className="relative z-10">Start building free</span>
+            <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </Link>
+          <a href="#demo" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-surface/50 px-8 py-4 text-base font-semibold text-foreground backdrop-blur-md transition-all hover:bg-surface hover:border-white/20">
+            <PlayCircle className="h-5 w-5" />
+            Watch product tour
+          </a>
         </motion.div>
-      </div>
+      </motion.div>
+
+      {/* Premium Dashboard Preview */}
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="relative mx-auto mt-24 w-full max-w-6xl px-6 z-20"
+      >
+        <div className="relative rounded-3xl border border-white/10 bg-surface/40 p-2 backdrop-blur-2xl shadow-premium">
+          <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-b from-primary/10 to-transparent" />
+          <div className="relative overflow-hidden rounded-2xl bg-background border border-white/5">
+             {/* Fake browser bar */}
+             <div className="flex items-center gap-2 border-b border-white/5 bg-surface/80 px-4 py-3">
+               <div className="flex gap-1.5">
+                 <div className="h-3 w-3 rounded-full bg-destructive/80" />
+                 <div className="h-3 w-3 rounded-full bg-secondary/80" />
+                 <div className="h-3 w-3 rounded-full bg-accent/80" />
+               </div>
+               <div className="mx-auto flex h-6 w-full max-w-xs items-center justify-center rounded-md bg-background/50 text-[10px] text-muted-foreground font-mono">
+                 dashboard.kalamitra.ai
+               </div>
+             </div>
+             {/* Preview Content */}
+             <div className="relative aspect-[16/9] w-full overflow-hidden">
+                <img src={heroImg} alt="Platform Preview" className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-luminosity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                
+                {/* Floating UI Elements inside preview */}
+                <motion.div 
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 1, duration: 0.8 }}
+                  className="absolute bottom-10 left-10 rounded-2xl border border-white/10 bg-surface/80 p-4 backdrop-blur-xl shadow-2xl"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary/20 text-primary-glow">
+                      <Wand2 className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Listing Generated</p>
+                      <p className="text-xs text-muted-foreground">SEO optimized in 1.2s</p>
+                    </div>
+                  </div>
+                </motion.div>
+             </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
 
-function FloatingCard({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay, duration: 0.6, ease: "easeOut" }}
-      className={`hidden md:block ${className}`}
-    >
-      <div className="rounded-2xl glass-strong px-4 py-3 shadow-[var(--shadow-card)]">{children}</div>
-    </motion.div>
-  );
-}
-
-/* ---------- stats ---------- */
-
-const STATS = [
-  { value: "12,400+", label: "Artisans empowered" },
-  { value: "1.8L", label: "Products listed" },
-  { value: "94,000", label: "Orders completed" },
-  { value: "₹6.2 Cr", label: "Revenue generated" },
-];
-
 function Stats() {
+  const STATS = [
+    { value: "$2.4M", label: "Artisan Revenue" },
+    { value: "40K+", label: "AI Listings Created" },
+    { value: "14", label: "Languages Supported" },
+    { value: "99.9%", label: "Platform Uptime" },
+  ];
+
   return (
-    <section className="px-6">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-2 gap-4 rounded-3xl glass p-6 md:grid-cols-4 md:p-10">
+    <section className="px-6 py-12 relative z-20 -mt-20">
+      <div className="mx-auto max-w-5xl rounded-3xl border border-white/5 bg-surface/60 backdrop-blur-3xl shadow-2xl p-8 md:p-12">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 divide-x divide-white/5">
           {STATS.map((s, i) => (
             <motion.div
               key={s.label}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="text-center md:text-left"
+              transition={{ delay: i * 0.1, duration: 0.6 }}
+              className="text-center px-4"
             >
-              <div className="font-display text-3xl font-semibold text-gradient md:text-5xl">
+              <div className="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl">
                 {s.value}
               </div>
-              <div className="mt-1 text-xs text-muted-foreground md:text-sm">{s.label}</div>
+              <div className="mt-2 text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                {s.label}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -321,101 +263,64 @@ function Stats() {
   );
 }
 
-/* ---------- how it works ---------- */
-
-const STEPS = [
-  {
-    icon: Upload,
-    title: "Upload product",
-    desc: "Snap a photo from your phone. Even a rough one — we'll handle the rest.",
-  },
-  {
-    icon: Wand2,
-    title: "AI enhances image",
-    desc: "Clean backgrounds, studio lighting, and 4K detail in seconds.",
-  },
-  {
-    icon: ScrollText,
-    title: "AI creates listing",
-    desc: "Title, description, story, and SEO tags — auto-written for your buyer.",
-  },
-  {
-    icon: Store,
-    title: "Sell across India",
-    desc: "Publish to Kalamitra marketplace and manage orders from one dashboard.",
-  },
-];
-
-function HowItWorks() {
-  return (
-    <Section
-      id="how"
-      eyebrow="How it works"
-      title={<>From workshop to checkout in <span className="text-gradient">four steps</span></>}
-      description="No tech skills needed. Speak in your language. We do the heavy lifting."
-    >
-      <div className="relative grid gap-6 md:grid-cols-4">
-        <div className="pointer-events-none absolute left-0 right-0 top-12 hidden h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent md:block" />
-        {STEPS.map((step, i) => (
-          <motion.div
-            key={step.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.55 }}
-            className="relative rounded-2xl glass p-6"
-          >
-            <div className="mb-4 grid h-10 w-10 place-items-center rounded-xl bg-[image:var(--gradient-primary)] shadow-[var(--shadow-glow)]">
-              <step.icon className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div className="mb-2 text-xs font-mono text-muted-foreground">0{i + 1}</div>
-            <h3 className="text-xl font-semibold">{step.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{step.desc}</p>
-          </motion.div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ---------- features ---------- */
-
-const FEATURES = [
-  { icon: ScrollText, title: "AI description generator", desc: "Compelling product copy tuned for buyers — in seconds." },
-  { icon: Sparkles, title: "AI story generator", desc: "Share the soul behind every craft with authentic artisan stories." },
-  { icon: ImageIcon, title: "AI image enhancement", desc: "Studio-quality photos from a single phone snap." },
-  { icon: Mic, title: "Voice-based creation", desc: "Speak your product details. We turn them into a listing." },
-  { icon: Languages, title: "14 regional languages", desc: "Hindi, Tamil, Bengali, Marathi and more — first class." },
-  { icon: Boxes, title: "Inventory management", desc: "Track stock, variants, and low-quantity alerts." },
-  { icon: Truck, title: "Order tracking", desc: "Live shipment status with India-wide logistics partners." },
-  { icon: ShieldCheck, title: "Marketplace integration", desc: "One-click sync to Amazon, Flipkart, and more." },
-];
-
 function Features() {
+  const BENTOS = [
+    {
+      title: "Auto-Magic Descriptions",
+      desc: "Our LLM understands craft nuances and outputs high-converting copy in seconds.",
+      icon: ScrollText,
+      span: "col-span-1 md:col-span-2",
+      delay: 0
+    },
+    {
+      title: "One-Click Studio",
+      desc: "Transform phone photos into 4K studio shots.",
+      icon: ImageIcon,
+      span: "col-span-1 md:col-span-1",
+      delay: 0.1
+    },
+    {
+      title: "Voice to Commerce",
+      desc: "Speak your product details in any regional language.",
+      icon: Mic,
+      span: "col-span-1 md:col-span-1",
+      delay: 0.2
+    },
+    {
+      title: "Global Inventory Sync",
+      desc: "Seamlessly push products to Amazon, Flipkart, and Shopify with zero friction.",
+      icon: Boxes,
+      span: "col-span-1 md:col-span-2",
+      delay: 0.3
+    }
+  ];
+
   return (
     <Section
       id="features"
-      eyebrow="Features"
-      title={<>Everything an artisan needs, <br className="hidden md:block" /> nothing they don't</>}
-      description="A complete commerce toolkit, designed to feel as familiar as a phone call."
+      eyebrow="Capabilities"
+      title={<span>Engineered for <br/> <span className="text-gradient">effortless scale</span></span>}
+      description="We abstracted away the complexity of online selling so you can focus entirely on your craft."
     >
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {FEATURES.map((f, i) => (
+      <div className="grid gap-4 md:grid-cols-3 md:grid-rows-2">
+        {BENTOS.map((b) => (
           <motion.div
-            key={f.title}
+            key={b.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: (i % 4) * 0.06, duration: 0.5 }}
-            className="group relative overflow-hidden rounded-2xl glass p-6 transition hover:-translate-y-1 hover:border-primary/40"
+            transition={{ delay: b.delay, duration: 0.6 }}
+            className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-surface/40 p-8 backdrop-blur-sm transition-all hover:bg-surface/60 hover:border-white/20 ${b.span}`}
           >
-            <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl transition group-hover:bg-primary/20" />
-            <div className="relative">
-              <div className="mb-4 grid h-10 w-10 place-items-center rounded-lg bg-surface-elevated">
-                <f.icon className="h-5 w-5 text-secondary" />
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-[80px] transition-all group-hover:bg-primary/20" />
+            <div className="relative z-10 flex h-full flex-col justify-between gap-12">
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-background border border-white/5 shadow-inner">
+                <b.icon className="h-5 w-5 text-foreground" />
               </div>
-              <h3 className="text-lg font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
+              <div>
+                <h3 className="font-display text-2xl font-semibold text-foreground">{b.title}</h3>
+                <p className="mt-2 text-muted-foreground">{b.desc}</p>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -424,357 +329,142 @@ function Features() {
   );
 }
 
-/* ---------- AI studio preview ---------- */
+function Stories() {
+  const TESTIMONIALS = [
+    { img: artisan1, name: "Lakshmi Devi", craft: "Potter · Khurja", quote: "I spoke into my phone in Hindi. Within minutes my diyas had a beautiful listing." },
+    { img: artisan2, name: "Manoj Patel", craft: "Weaver · Surat", quote: "The AI made my fabric look like a magazine photo. Customers are now my regulars." },
+    { img: artisan3, name: "Priya Ranjan", craft: "Painter · Jaipur", quote: "It felt like having a son who knows technology. It just works effortlessly." },
+  ];
 
-const AI_MODULES = [
-  { icon: ImageIcon, name: "Image Enhancement", color: "text-primary-glow" },
-  { icon: ScrollText, name: "Description Writer", color: "text-secondary" },
-  { icon: Sparkles, name: "Storytelling", color: "text-accent" },
-  { icon: Tags, name: "SEO Tags", color: "text-primary-glow" },
-  { icon: Mic, name: "Voice-to-Text", color: "text-secondary" },
-];
-
-function AIStudio() {
   return (
     <Section
-      id="ai"
-      eyebrow="AI Studio"
-      title={<>Five intelligent modules, <span className="text-gradient">one calm workspace</span></>}
-      description="Purpose-built models that understand craft, culture, and commerce."
+      id="stories"
+      eyebrow="Success Stories"
+      title={<span>Empowering <span className="text-gradient">creators</span></span>}
     >
-      <div className="grid items-center gap-10 lg:grid-cols-2">
-        <div className="space-y-3">
-          {AI_MODULES.map((m, i) => (
-            <motion.div
-              key={m.name}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="flex items-center justify-between rounded-2xl glass p-4"
-            >
-              <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-lg bg-surface-elevated">
-                  <m.icon className={`h-5 w-5 ${m.color}`} />
-                </div>
+      <div className="grid gap-6 md:grid-cols-3">
+        {TESTIMONIALS.map((t, i) => (
+          <motion.div
+            key={t.name}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+            className="group relative overflow-hidden rounded-3xl border border-white/5 bg-surface/30 backdrop-blur-sm"
+          >
+            <div className="h-64 overflow-hidden">
+              <img src={t.img} alt={t.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105 group-hover:rotate-1 opacity-80" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="mb-4 flex gap-1">
+                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-accent text-accent" />)}
+              </div>
+              <p className="font-display text-xl font-medium leading-snug text-foreground mb-4">"{t.quote}"</p>
+              <div className="flex items-center justify-between border-t border-white/10 pt-4">
                 <div>
-                  <p className="font-medium">{m.name}</p>
-                  <p className="text-xs text-muted-foreground">Ready · Avg. 1.4s response</p>
+                  <p className="font-semibold text-foreground">{t.name}</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-widest">{t.craft}</p>
                 </div>
               </div>
-              <span className="flex items-center gap-1.5 text-xs text-accent">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                Active
-              </span>
-            </motion.div>
-          ))}
-        </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </Section>
+  );
+}
 
-        {/* Mock chat / generator */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
+function CTA() {
+  return (
+    <section className="px-6 py-24 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5" />
+      <div className="mx-auto max-w-5xl relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="rounded-3xl glass-strong p-5 shadow-[var(--shadow-card)]"
+          transition={{ duration: 0.8 }}
+          className="rounded-[3rem] border border-white/10 bg-gradient-to-br from-surface to-surface-elevated p-12 md:p-20 text-center shadow-premium relative overflow-hidden"
         >
-          <div className="flex items-center justify-between border-b border-border pb-3">
-            <div className="flex items-center gap-2">
-              <div className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-              <div className="h-2.5 w-2.5 rounded-full bg-secondary/70" />
-              <div className="h-2.5 w-2.5 rounded-full bg-accent/70" />
-            </div>
-            <span className="text-xs text-muted-foreground">kalamitra.ai/studio</span>
-          </div>
-          <div className="mt-5 space-y-4 text-sm">
-            <div className="flex justify-end">
-              <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-primary/20 px-4 py-2 text-foreground">
-                Blue pottery vase, 10 inches, made in Jaipur
-              </div>
-            </div>
-            <div className="flex justify-start">
-              <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-surface-elevated px-4 py-3 text-foreground">
-                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-secondary">Generated listing</p>
-                <p className="font-display text-base font-semibold">Heritage Blue Pottery Vase — Jaipur</p>
-                <p className="mt-1 text-muted-foreground">
-                  Hand-thrown by third-generation artisans of Jaipur, this 10-inch vase carries
-                  the cobalt blue that made the city famous on the Silk Route…
-                </p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {["handmade", "jaipur", "blue-pottery", "home-decor", "gift"].map((t) => (
-                    <span key={t} className="rounded-full bg-accent/10 px-2 py-0.5 text-xs text-accent">
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-border bg-surface/50 px-3 py-2 text-muted-foreground">
-              <Mic className="h-4 w-4 text-secondary" />
-              <span className="text-xs">Tap to speak in Hindi, Tamil, Bengali…</span>
-              <div className="ml-auto flex gap-1">
-                {[3, 5, 4, 6, 3, 5, 4].map((h, i) => (
-                  <span
-                    key={i}
-                    className="w-0.5 rounded-full bg-secondary/70"
-                    style={{ height: `${h * 3}px` }}
-                  />
-                ))}
-              </div>
+          <div className="absolute inset-0 grid-bg opacity-30" />
+          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/20 blur-[100px]" />
+          
+          <div className="relative z-10">
+            <h2 className="font-display text-4xl font-bold md:text-6xl tracking-tight">
+              Ready to scale your <br/> <span className="text-gradient">creative empire?</span>
+            </h2>
+            <p className="mt-6 mx-auto max-w-xl text-lg text-muted-foreground">
+              Join the platform that is redefining commerce for artisans. Deploy your intelligent storefront in under 3 minutes.
+            </p>
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link to="/auth" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-semibold text-background transition-all hover:scale-105 shadow-2xl">
+                Create free account
+              </Link>
             </div>
           </div>
         </motion.div>
       </div>
-    </Section>
-  );
-}
-
-/* ---------- testimonials ---------- */
-
-const TESTIMONIALS = [
-  {
-    img: artisan1,
-    name: "Lakshmi Devi",
-    craft: "Potter · Khurja, UP",
-    quote:
-      "I spoke into my phone in Hindi. Within minutes my diyas had a beautiful listing. I sold 40 sets in the first week of Diwali.",
-  },
-  {
-    img: artisan2,
-    name: "Manoj Patel",
-    craft: "Handloom Weaver · Surat",
-    quote:
-      "Kalamitra's AI made my fabric look like a magazine photo. Customers from Bangalore and Delhi are now my regulars.",
-  },
-  {
-    img: artisan3,
-    name: "Priya Ranjan",
-    craft: "Diya Painter · Jaipur",
-    quote:
-      "I was scared of selling online. Kalamitra felt like having a son who knows technology. It just works.",
-  },
-];
-
-function Stories() {
-  return (
-    <Section
-      id="stories"
-      eyebrow="Stories"
-      title={<>Real artisans, <span className="text-gradient">real livelihoods</span></>}
-      description="A growing community turning generational craft into thriving businesses."
-    >
-      <div className="grid gap-6 md:grid-cols-3">
-        {TESTIMONIALS.map((t, i) => (
-          <motion.figure
-            key={t.name}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.55 }}
-            className="overflow-hidden rounded-3xl glass"
-          >
-            <div className="relative h-56 overflow-hidden">
-              <img
-                src={t.img}
-                alt={t.name}
-                width={768}
-                height={768}
-                loading="lazy"
-                className="h-full w-full object-cover transition duration-700 hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent" />
-            </div>
-            <div className="p-6">
-              <div className="mb-3 flex gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3.5 w-3.5 fill-secondary text-secondary" />
-                ))}
-              </div>
-              <blockquote className="font-display text-lg leading-snug">
-                "{t.quote}"
-              </blockquote>
-              <figcaption className="mt-5 border-t border-border pt-4">
-                <p className="font-medium">{t.name}</p>
-                <p className="text-xs text-muted-foreground">{t.craft}</p>
-              </figcaption>
-            </div>
-          </motion.figure>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ---------- faq ---------- */
-
-const FAQS = [
-  {
-    q: "Do I need a smartphone or laptop to use Kalamitra?",
-    a: "A basic smartphone with a camera is enough. The whole platform is designed mobile-first and supports voice input in 14 regional languages.",
-  },
-  {
-    q: "How much does it cost to list a product?",
-    a: "The first 50 listings are free for every artisan. After that, we charge a tiny percentage only when you make a sale — never an upfront fee.",
-  },
-  {
-    q: "Does Kalamitra handle shipping?",
-    a: "Yes. We've partnered with India-wide logistics providers. Print a label, hand off the parcel, and we'll keep buyers updated automatically.",
-  },
-  {
-    q: "Can the AI really write in my regional language?",
-    a: "Our models are trained for Indian languages and craft vocabulary — Hindi, Tamil, Bengali, Marathi, Telugu, Kannada, Gujarati, Punjabi and more.",
-  },
-  {
-    q: "Who owns my product photos and stories?",
-    a: "You do. Always. Kalamitra never re-sells your content, and you can export or delete everything any time.",
-  },
-];
-
-function FAQ() {
-  const [open, setOpen] = useState(0);
-  return (
-    <Section
-      id="faq"
-      eyebrow="FAQ"
-      title="Questions, answered"
-      description="Everything you need to know before you start selling."
-    >
-      <div className="mx-auto max-w-3xl space-y-3">
-        {FAQS.map((f, i) => {
-          const isOpen = open === i;
-          return (
-            <div
-              key={f.q}
-              className="overflow-hidden rounded-2xl glass transition"
-            >
-              <button
-                onClick={() => setOpen(isOpen ? -1 : i)}
-                className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
-              >
-                <span className="font-medium">{f.q}</span>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface-elevated">
-                  {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                </span>
-              </button>
-              {isOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  className="px-6 pb-5 text-sm text-muted-foreground"
-                >
-                  {f.a}
-                </motion.div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </Section>
-  );
-}
-
-/* ---------- CTA ---------- */
-
-function CTA() {
-  return (
-    <section className="px-6 pb-24">
-      <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl glass-strong p-10 md:p-16">
-        <div className="grid items-center gap-8 md:grid-cols-[1.5fr,1fr]">
-          <div>
-            <h2 className="text-4xl font-medium md:text-5xl">
-              Your craft deserves <span className="text-gradient">a global stage.</span>
-            </h2>
-            <p className="mt-4 max-w-xl text-muted-foreground md:text-lg">
-              Join 12,000+ artisans turning tradition into thriving online businesses with
-              Kalamitra. Setup takes 3 minutes.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 md:items-end">
-            <Link to="/auth" className="inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-primary)] px-6 py-3 text-base font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:brightness-110">
-              Start selling free
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <button className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-sm text-foreground transition hover:bg-surface">
-              Book a 1:1 onboarding call
-            </button>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
 
-/* ---------- footer ---------- */
-
 function Footer() {
   return (
-    <footer className="border-t border-border px-6 pb-10 pt-16">
-      <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.4fr,1fr,1fr,1fr]">
+    <footer className="border-t border-white/5 bg-background px-6 pt-20 pb-10">
+      <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[2fr,1fr,1fr,1fr]">
         <div>
-          <a href="#" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[image:var(--gradient-primary)] shadow-[var(--shadow-glow)]">
-              <span className="font-display text-lg font-bold text-primary-foreground">K</span>
-            </span>
-            <span className="font-display text-lg font-semibold">Kalamitra</span>
-          </a>
-          <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-            Where tradition meets technology. Empowering India's artisans, one beautiful
-            listing at a time.
+          <Link to="/" className="flex items-center gap-2 mb-6">
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent">
+              <span className="font-display text-sm font-bold text-primary-foreground">K</span>
+            </div>
+            <span className="font-display text-lg font-semibold tracking-tight">Kalamitra</span>
+          </Link>
+          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
+            Building the intelligence layer for global artisan commerce. Engineered with precision in India.
           </p>
-          <div className="mt-6 flex gap-3 text-muted-foreground">
+          <div className="mt-8 flex gap-4">
             {[Instagram, Twitter, Linkedin, Github].map((Icon, i) => (
-              <a
-                key={i}
-                href="#"
-                className="grid h-9 w-9 place-items-center rounded-full glass transition hover:text-foreground"
-              >
-                <Icon className="h-4 w-4" />
+              <a key={i} href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Icon className="h-5 w-5" />
               </a>
             ))}
           </div>
         </div>
         {[
-          { title: "Product", items: ["AI Studio", "Marketplace", "Pricing", "Roadmap"] },
-          { title: "Company", items: ["About", "Stories", "Press", "Careers"] },
-          { title: "Support", items: ["Help center", "Contact", "Privacy", "Terms"] },
+          { title: "Product", items: ["AI Studio", "Marketplace", "Enterprise", "Pricing"] },
+          { title: "Resources", items: ["Documentation", "API Reference", "Blog", "Community"] },
+          { title: "Company", items: ["About", "Careers", "Legal", "Contact"] },
         ].map((col) => (
           <div key={col.title}>
-            <p className="mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              {col.title}
-            </p>
-            <ul className="space-y-2 text-sm">
+            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-foreground">{col.title}</p>
+            <ul className="space-y-4 text-sm text-muted-foreground">
               {col.items.map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-foreground/80 transition hover:text-foreground">
-                    {item}
-                  </a>
-                </li>
+                <li key={item}><a href="#" className="hover:text-foreground transition-colors">{item}</a></li>
               ))}
             </ul>
           </div>
         ))}
       </div>
-      <div className="mx-auto mt-12 flex max-w-7xl flex-col items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row">
-        <p>© 2026 Kalamitra · Crafted by team Insight Coders</p>
-        <p>Made with care in Bharat 🇮🇳</p>
+      <div className="mx-auto mt-20 max-w-7xl border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-muted-foreground">
+        <p>© 2026 Kalamitra Inc. All rights reserved.</p>
+        <div className="flex gap-6">
+          <a href="#" className="hover:text-foreground">Privacy Policy</a>
+          <a href="#" className="hover:text-foreground">Terms of Service</a>
+        </div>
       </div>
     </footer>
   );
 }
 
-/* ---------- page ---------- */
-
 function Landing() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-background selection:bg-primary/30">
       <Nav />
       <Hero />
       <Stats />
-      <HowItWorks />
       <Features />
-      <AIStudio />
       <Stories />
-      <FAQ />
       <CTA />
       <Footer />
     </main>
