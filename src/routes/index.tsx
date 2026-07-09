@@ -1,10 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  Sparkles, Upload, Wand2, Store, Mic, Languages,
-  Boxes, Truck, ShieldCheck, Image as ImageIcon,
-  ScrollText, Tags, ArrowRight, PlayCircle, Star,
-  Plus, Minus, Instagram, Twitter, Linkedin, Github
+  ArrowRight, MapPin, Shield, HeartHandshake, Globe, Quote, Instagram, Twitter, Linkedin
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import heroImg from "@/assets/hero-artisan.jpg";
@@ -15,8 +12,8 @@ import artisan3 from "@/assets/artisan-3.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kalamitra — Premium AI Commerce" },
-      { name: "description", content: "Empowering India's artisans with next-generation AI tools." },
+      { title: "Kalamitra — Authentic Indian Craftsmanship" },
+      { name: "description", content: "India's premium digital marketplace connecting authentic local artisans directly with buyers." },
     ],
   }),
   component: Landing,
@@ -26,46 +23,6 @@ const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
-
-function Section({
-  id, eyebrow, title, description, children, className = "",
-}: {
-  id?: string; eyebrow?: string; title?: React.ReactNode; description?: string; children: React.ReactNode; className?: string;
-}) {
-  return (
-    <section id={id} className={`relative px-6 py-24 md:py-32 overflow-hidden ${className}`}>
-      <div className="mx-auto max-w-7xl relative z-10">
-        {(eyebrow || title) && (
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="mx-auto mb-16 max-w-3xl text-center"
-          >
-            {eyebrow && (
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-glow backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5" />
-                {eyebrow}
-              </span>
-            )}
-            {title && (
-              <h2 className="mt-6 font-display text-4xl font-bold tracking-tight md:text-6xl text-foreground">
-                {title}
-              </h2>
-            )}
-            {description && (
-              <p className="mt-6 text-lg text-muted-foreground md:text-xl leading-relaxed">
-                {description}
-              </p>
-            )}
-          </motion.div>
-        )}
-        {children}
-      </div>
-    </section>
-  );
-}
 
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -82,31 +39,26 @@ function Nav() {
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-background/70 backdrop-blur-2xl border-b border-white/5 py-3 shadow-2xl" : "bg-transparent py-6"
-      } px-6`}
+        scrolled ? "bg-surface/90 backdrop-blur-2xl border-b border-border py-4 shadow-sm" : "bg-transparent py-8"
+      } px-6 md:px-12`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link to="/" className="group flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-premium transition-transform duration-300 group-hover:scale-105">
-            <span className="font-display text-xl font-bold text-primary-foreground">K</span>
-          </div>
-          <span className="font-display text-xl font-semibold tracking-tight">Kalamitra</span>
+          <span className="font-display text-2xl font-bold tracking-tight text-primary">KalaMitra</span>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
-          {['Features', 'Stories'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase().replace(' ', '')}`} className="transition-colors hover:text-foreground">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-foreground/80 md:flex uppercase tracking-widest">
+          {['Explore', 'Artisans', 'Collections', 'Stories', 'About'].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="transition-colors hover:text-primary">
               {item}
             </a>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
-          <Link to="/auth" className="hidden text-sm font-medium text-muted-foreground transition hover:text-foreground md:block">
-            Sign in
+        <div className="flex items-center gap-6">
+          <Link to="/auth" className="hidden text-sm font-medium text-foreground/80 uppercase tracking-widest transition hover:text-primary md:block">
+            Login
           </Link>
-          <Link to="/auth" className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
-            <span className="relative z-10">Get Started</span>
-            <ArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            <div className="absolute inset-0 z-0 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity duration-500 group-hover:opacity-10" />
+          <Link to="/auth" className="inline-flex items-center gap-2 border border-primary text-primary px-6 py-2.5 text-sm uppercase tracking-widest font-medium transition-all hover:bg-primary hover:text-primary-foreground">
+            Become Seller
           </Link>
         </div>
       </div>
@@ -116,144 +68,124 @@ function Nav() {
 
 function Hero() {
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const y1 = useTransform(scrollY, [0, 1000], [0, 150]);
+  const y2 = useTransform(scrollY, [0, 1000], [0, -50]);
 
   return (
-    <section className="relative min-h-screen pt-32 md:pt-48 pb-20 overflow-hidden flex flex-col items-center">
-      {/* Animated abstract background elements */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-10000" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-accent/15 rounded-full blur-[150px] mix-blend-screen animate-pulse duration-7000 delay-1000" />
-
-      <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]" />
-
-      <motion.div style={{ y: y1, opacity }} className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+    <section className="relative min-h-screen pt-32 pb-20 overflow-hidden flex items-center paper-texture">
+      <div className="mx-auto max-w-7xl px-6 md:px-12 grid lg:grid-cols-2 gap-16 items-center relative z-10 w-full">
+        {/* Left Side */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold tracking-widest text-foreground backdrop-blur-md mb-8 shadow-2xl"
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="max-w-xl"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-          </span>
-          Kalamitra AI 2.0 is now live
-        </motion.div>
-        
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display text-5xl font-bold tracking-tight md:text-[5.5rem] leading-[1.05]"
-        >
-          Scale your craft.<br />
-          <span className="text-gradient">Powered by intelligence.</span>
-        </motion.h1>
-        
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground md:text-xl leading-relaxed"
-        >
-          Turn a single photo into a professional storefront. Our AI agent writes your story, enhances images, and manages inventory automatically.
-        </motion.p>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <Link to="/auth" className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-foreground px-8 py-4 text-base font-semibold text-background transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
-            <span className="relative z-10">Start building free</span>
-            <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
-          </Link>
-          <a href="#demo" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-surface/50 px-8 py-4 text-base font-semibold text-foreground backdrop-blur-md transition-all hover:bg-surface hover:border-white/20">
-            <PlayCircle className="h-5 w-5" />
-            Watch product tour
-          </a>
-        </motion.div>
-      </motion.div>
-
-      {/* Premium Dashboard Preview */}
-      <motion.div
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative mx-auto mt-24 w-full max-w-6xl px-6 z-20"
-      >
-        <div className="relative rounded-3xl border border-white/10 bg-surface/40 p-2 backdrop-blur-2xl shadow-premium">
-          <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-b from-primary/10 to-transparent" />
-          <div className="relative overflow-hidden rounded-2xl bg-background border border-white/5">
-             {/* Fake browser bar */}
-             <div className="flex items-center gap-2 border-b border-white/5 bg-surface/80 px-4 py-3">
-               <div className="flex gap-1.5">
-                 <div className="h-3 w-3 rounded-full bg-destructive/80" />
-                 <div className="h-3 w-3 rounded-full bg-secondary/80" />
-                 <div className="h-3 w-3 rounded-full bg-accent/80" />
-               </div>
-               <div className="mx-auto flex h-6 w-full max-w-xs items-center justify-center rounded-md bg-background/50 text-[10px] text-muted-foreground font-mono">
-                 dashboard.kalamitra.ai
-               </div>
-             </div>
-             {/* Preview Content */}
-             <div className="relative aspect-[16/9] w-full overflow-hidden">
-                <img src={heroImg} alt="Platform Preview" className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-luminosity" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-                
-                {/* Floating UI Elements inside preview */}
-                <motion.div 
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 1, duration: 0.8 }}
-                  className="absolute bottom-10 left-10 rounded-2xl border border-white/10 bg-surface/80 p-4 backdrop-blur-xl shadow-2xl"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary/20 text-primary-glow">
-                      <Wand2 className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">Listing Generated</p>
-                      <p className="text-xs text-muted-foreground">SEO optimized in 1.2s</p>
-                    </div>
-                  </div>
-                </motion.div>
-             </div>
+          <h1 className="font-display text-5xl md:text-7xl font-semibold leading-[1.1] text-foreground tracking-tight">
+            Every Handmade Piece <br/><i className="font-serif font-light text-primary">Carries a Story.</i>
+          </h1>
+          <p className="mt-8 text-lg text-muted-foreground leading-relaxed">
+            Discover India's most exquisite artisanal crafts. We bridge the gap between rural master craftsmen and homes that appreciate authentic, timeless luxury.
+          </p>
+          <div className="mt-12 flex flex-col sm:flex-row gap-6">
+            <Link to="/shop" className="inline-flex items-center justify-center gap-2 bg-foreground text-background px-8 py-4 text-sm uppercase tracking-widest font-medium transition-transform hover-lift">
+              Explore Collection
+            </Link>
+            <a href="#artisans" className="inline-flex items-center justify-center gap-2 border border-border px-8 py-4 text-sm uppercase tracking-widest font-medium text-foreground transition-colors hover:border-primary hover:text-primary">
+              Meet the Artisans
+            </a>
           </div>
+        </motion.div>
+
+        {/* Right Side */}
+        <div className="relative h-[600px] w-full hidden lg:block">
+          <motion.div style={{ y: y1 }} className="absolute right-0 top-0 w-4/5 h-[550px] overflow-hidden">
+            <img src={heroImg} alt="Master artisan crafting pottery" className="w-full h-full object-cover scale-105" />
+          </motion.div>
+          
+          <motion.div style={{ y: y2 }} className="absolute left-0 bottom-10 w-[240px] h-[320px] overflow-hidden border-8 border-background shadow-2xl z-20">
+            <img src={artisan1} alt="Artisan portrait" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+            <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur-sm p-3 text-center text-xs font-medium uppercase tracking-wider text-foreground">
+              Rani Devi, Weaver
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
 
-function Stats() {
-  const STATS = [
-    { value: "$2.4M", label: "Artisan Revenue" },
-    { value: "40K+", label: "AI Listings Created" },
-    { value: "14", label: "Languages Supported" },
-    { value: "99.9%", label: "Platform Uptime" },
+function SocialTrust() {
+  return (
+    <section className="border-y border-border/50 bg-surface/50 py-12">
+      <div className="mx-auto max-w-7xl px-6 flex flex-wrap justify-center md:justify-between items-center gap-8 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        <span>Featured In Vogue</span>
+        <span>Government Support</span>
+        <span>Verified Artisans</span>
+        <span>Secure Payments</span>
+        <span>10K+ Happy Buyers</span>
+      </div>
+    </section>
+  );
+}
+
+function CraftJourney() {
+  const steps = [
+    { title: "Forest to Hands", desc: "Sourcing sustainable raw materials directly from nature, ensuring zero ecological harm." },
+    { title: "Wood Selection", desc: "Master craftsmen hand-pick the perfect grain, reading the wood like a canvas." },
+    { title: "Hand Carving", desc: "Weeks of meticulous chiseling and shaping, passing down techniques centuries old." },
+    { title: "Natural Finishing", desc: "Using organic oils and plant-based dyes to bring the craft to vibrant life." },
+    { title: "Your Home", desc: "A timeless masterpiece arrives at your doorstep, carrying the soul of its maker." }
   ];
 
   return (
-    <section className="px-6 py-12 relative z-20 -mt-20">
-      <div className="mx-auto max-w-5xl rounded-3xl border border-white/5 bg-surface/60 backdrop-blur-3xl shadow-2xl p-8 md:p-12">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 divide-x divide-white/5">
-          {STATS.map((s, i) => (
+    <section id="stories" className="py-32 px-6 bg-surface">
+      <div className="mx-auto max-w-7xl">
+        <div className="text-center mb-24">
+          <h2 className="font-display text-4xl md:text-5xl font-medium">The Journey of Craft</h2>
+          <p className="mt-4 text-muted-foreground uppercase tracking-widest text-sm">From Nature to Your Living Room</p>
+        </div>
+        
+        <div className="relative">
+          <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border/50 hidden md:block" />
+          
+          {steps.map((step, i) => (
             <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }}
+              key={step.title}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.6 }}
-              className="text-center px-4"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8 }}
+              className={`relative flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-20 last:mb-0 ${
+                i % 2 === 0 ? "md:flex-row-reverse" : ""
+              }`}
             >
-              <div className="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-                {s.value}
+              <div className="flex-1 w-full md:text-right hidden md:block">
+                {i % 2 === 0 && (
+                  <div>
+                    <h3 className="font-display text-2xl mb-3 text-primary">{step.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed max-w-md ml-auto">{step.desc}</p>
+                  </div>
+                )}
               </div>
-              <div className="mt-2 text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-                {s.label}
+              
+              <div className="w-12 h-12 shrink-0 rounded-full border border-primary flex items-center justify-center bg-background z-10 text-primary font-display text-xl relative">
+                {i + 1}
+              </div>
+              
+              <div className="flex-1 w-full">
+                {i % 2 !== 0 && (
+                  <div className="md:text-left">
+                    <h3 className="font-display text-2xl mb-3 text-primary">{step.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed max-w-md">{step.desc}</p>
+                  </div>
+                )}
+                {i % 2 === 0 && (
+                  <div className="md:hidden">
+                    <h3 className="font-display text-2xl mb-3 text-primary">{step.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{step.desc}</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
@@ -263,194 +195,246 @@ function Stats() {
   );
 }
 
-function Features() {
-  const BENTOS = [
-    {
-      title: "Auto-Magic Descriptions",
-      desc: "Our LLM understands craft nuances and outputs high-converting copy in seconds.",
-      icon: ScrollText,
-      span: "col-span-1 md:col-span-2",
-      delay: 0
-    },
-    {
-      title: "One-Click Studio",
-      desc: "Transform phone photos into 4K studio shots.",
-      icon: ImageIcon,
-      span: "col-span-1 md:col-span-1",
-      delay: 0.1
-    },
-    {
-      title: "Voice to Commerce",
-      desc: "Speak your product details in any regional language.",
-      icon: Mic,
-      span: "col-span-1 md:col-span-1",
-      delay: 0.2
-    },
-    {
-      title: "Global Inventory Sync",
-      desc: "Seamlessly push products to Amazon, Flipkart, and Shopify with zero friction.",
-      icon: Boxes,
-      span: "col-span-1 md:col-span-2",
-      delay: 0.3
-    }
+function FeaturedCollections() {
+  const collections = [
+    { title: "Wooden Decor", img: heroImg, class: "col-span-1 md:col-span-2 row-span-2 h-[600px]" },
+    { title: "Traditional Paintings", img: artisan3, class: "col-span-1 h-[280px]" },
+    { title: "Clay Art", img: artisan1, class: "col-span-1 h-[280px]" },
+    { title: "Textile Art", img: artisan2, class: "col-span-1 md:col-span-2 h-[400px]" },
   ];
 
   return (
-    <Section
-      id="features"
-      eyebrow="Capabilities"
-      title={<span>Engineered for <br/> <span className="text-gradient">effortless scale</span></span>}
-      description="We abstracted away the complexity of online selling so you can focus entirely on your craft."
-    >
-      <div className="grid gap-4 md:grid-cols-3 md:grid-rows-2">
-        {BENTOS.map((b) => (
-          <motion.div
-            key={b.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: b.delay, duration: 0.6 }}
-            className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-surface/40 p-8 backdrop-blur-sm transition-all hover:bg-surface/60 hover:border-white/20 ${b.span}`}
-          >
-            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-[80px] transition-all group-hover:bg-primary/20" />
-            <div className="relative z-10 flex h-full flex-col justify-between gap-12">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-background border border-white/5 shadow-inner">
-                <b.icon className="h-5 w-5 text-foreground" />
-              </div>
-              <div>
-                <h3 className="font-display text-2xl font-semibold text-foreground">{b.title}</h3>
-                <p className="mt-2 text-muted-foreground">{b.desc}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function Stories() {
-  const TESTIMONIALS = [
-    { img: artisan1, name: "Lakshmi Devi", craft: "Potter · Khurja", quote: "I spoke into my phone in Hindi. Within minutes my diyas had a beautiful listing." },
-    { img: artisan2, name: "Manoj Patel", craft: "Weaver · Surat", quote: "The AI made my fabric look like a magazine photo. Customers are now my regulars." },
-    { img: artisan3, name: "Priya Ranjan", craft: "Painter · Jaipur", quote: "It felt like having a son who knows technology. It just works effortlessly." },
-  ];
-
-  return (
-    <Section
-      id="stories"
-      eyebrow="Success Stories"
-      title={<span>Empowering <span className="text-gradient">creators</span></span>}
-    >
-      <div className="grid gap-6 md:grid-cols-3">
-        {TESTIMONIALS.map((t, i) => (
-          <motion.div
-            key={t.name}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
-            className="group relative overflow-hidden rounded-3xl border border-white/5 bg-surface/30 backdrop-blur-sm"
-          >
-            <div className="h-64 overflow-hidden">
-              <img src={t.img} alt={t.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105 group-hover:rotate-1 opacity-80" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <div className="mb-4 flex gap-1">
-                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-accent text-accent" />)}
-              </div>
-              <p className="font-display text-xl font-medium leading-snug text-foreground mb-4">"{t.quote}"</p>
-              <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                <div>
-                  <p className="font-semibold text-foreground">{t.name}</p>
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest">{t.craft}</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function CTA() {
-  return (
-    <section className="px-6 py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5" />
-      <div className="mx-auto max-w-5xl relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="rounded-[3rem] border border-white/10 bg-gradient-to-br from-surface to-surface-elevated p-12 md:p-20 text-center shadow-premium relative overflow-hidden"
-        >
-          <div className="absolute inset-0 grid-bg opacity-30" />
-          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/20 blur-[100px]" />
-          
-          <div className="relative z-10">
-            <h2 className="font-display text-4xl font-bold md:text-6xl tracking-tight">
-              Ready to scale your <br/> <span className="text-gradient">creative empire?</span>
-            </h2>
-            <p className="mt-6 mx-auto max-w-xl text-lg text-muted-foreground">
-              Join the platform that is redefining commerce for artisans. Deploy your intelligent storefront in under 3 minutes.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/auth" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-semibold text-background transition-all hover:scale-105 shadow-2xl">
-                Create free account
-              </Link>
-            </div>
+    <section id="collections" className="py-32 px-6 paper-texture">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div>
+            <h2 className="font-display text-4xl md:text-5xl font-medium">Curated Collections</h2>
+            <p className="mt-4 text-muted-foreground">Masterpieces defining Indian heritage.</p>
           </div>
-        </motion.div>
+          <Link to="/shop" className="text-sm uppercase tracking-widest font-medium border-b border-foreground pb-1 hover:text-primary hover:border-primary transition-colors">
+            View All Categories
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto">
+          {collections.map((c, i) => (
+            <motion.div
+              key={c.title}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.8 }}
+              className={`group relative overflow-hidden bg-surface ${c.class}`}
+            >
+              <img src={c.img} alt={c.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
+              <div className="absolute bottom-8 left-8 text-white">
+                <h3 className="font-display text-3xl font-medium mb-2 opacity-90">{c.title}</h3>
+                <span className="text-sm uppercase tracking-widest flex items-center gap-2 opacity-0 -translate-x-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0">
+                  Explore <ArrowRight className="w-4 h-4" />
+                </span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-function Footer() {
+function Artisans() {
   return (
-    <footer className="border-t border-white/5 bg-background px-6 pt-20 pb-10">
-      <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[2fr,1fr,1fr,1fr]">
-        <div>
-          <Link to="/" className="flex items-center gap-2 mb-6">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent">
-              <span className="font-display text-sm font-bold text-primary-foreground">K</span>
+    <section id="artisans" className="py-32 px-6 bg-surface-elevated text-foreground">
+      <div className="mx-auto max-w-7xl">
+        <div className="text-center mb-24">
+          <h2 className="font-display text-4xl md:text-5xl font-medium">Meet the Makers</h2>
+          <p className="mt-4 text-muted-foreground">The hands that preserve our legacy.</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="aspect-[3/4] overflow-hidden"
+          >
+            <img src={artisan2} alt="Artisan" className="w-full h-full object-cover" />
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-lg"
+          >
+            <div className="flex items-center gap-2 text-sm uppercase tracking-widest text-primary mb-6">
+              <MapPin className="w-4 h-4" /> Varanasi, Uttar Pradesh
             </div>
-            <span className="font-display text-lg font-semibold tracking-tight">Kalamitra</span>
+            <h3 className="font-display text-4xl mb-4 italic">"Weaving isn't just a livelihood. It's the rhythm of my breath."</h3>
+            <p className="text-muted-foreground mb-8 text-sm uppercase tracking-widest">Kabeer Das — 4th Generation Master Weaver</p>
+            
+            <p className="text-lg leading-relaxed mb-10 text-muted-foreground">
+              For over 45 years, Kabeer has sat at his wooden handloom, creating Banarasi silk sarees that take up to three months to complete. His intricate Zari work tells stories of ancient temple architecture and royal gardens.
+            </p>
+            
+            <Link to="/shop" className="inline-flex items-center gap-2 border border-border px-8 py-4 text-sm uppercase tracking-widest font-medium transition-colors hover:border-primary hover:text-primary">
+              View His Collection
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyKalaMitra() {
+  const sections = [
+    { title: "Fair Trade. No Middlemen.", desc: "When you buy on KalaMitra, 90% of the value goes directly to the artisan's pocket. We are a transparent bridge, not a toll booth.", icon: HeartHandshake, img: heroImg },
+    { title: "Certified Authentic", desc: "Every product comes with a digital certificate of authenticity, detailing the maker, the origin, and the hours poured into its creation.", icon: Shield, img: artisan3 },
+  ];
+
+  return (
+    <section className="py-32 px-6 paper-texture">
+      <div className="mx-auto max-w-7xl flex flex-col gap-32">
+        {sections.map((s, i) => (
+          <div key={s.title} className={`flex flex-col md:flex-row items-center gap-16 ${i % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="flex-1 w-full h-[500px] overflow-hidden bg-surface"
+            >
+              <img src={s.img} alt={s.title} className="w-full h-full object-cover opacity-90" />
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="flex-1 max-w-md"
+            >
+              <s.icon className="w-12 h-12 text-primary mb-6 stroke-[1]" />
+              <h2 className="font-display text-4xl mb-6">{s.title}</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">{s.desc}</p>
+            </motion.div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Stats() {
+  return (
+    <section className="py-24 border-y border-border/50 bg-surface text-center">
+      <div className="mx-auto max-w-5xl px-6 grid grid-cols-2 md:grid-cols-4 gap-12 divide-x divide-border/50">
+        {[
+          { v: "500+", l: "Verified Artisans" },
+          { v: "25+", l: "States Reached" },
+          { v: "10K+", l: "Handcrafted Products" },
+          { v: "50K+", l: "Happy Patrons" }
+        ].map((s, i) => (
+          <motion.div
+            key={s.l}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1, duration: 0.6 }}
+            className="flex flex-col items-center justify-center px-4"
+          >
+            <div className="font-display text-4xl md:text-5xl text-foreground mb-3">{s.v}</div>
+            <div className="text-xs uppercase tracking-widest text-muted-foreground font-medium">{s.l}</div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  return (
+    <section className="py-32 px-6 paper-texture">
+      <div className="mx-auto max-w-4xl text-center">
+        <Quote className="w-16 h-16 mx-auto text-primary/30 mb-8" />
+        <h2 className="font-display text-3xl md:text-5xl leading-tight mb-12 italic">
+          "The wooden chest arrived smelling of natural oils and monsoon rain. It isn't just furniture; it's a piece of India's soul resting in my London apartment."
+        </h2>
+        <div className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+          — Eleanor R., London
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Newsletter() {
+  return (
+    <section className="py-32 px-6 bg-surface-elevated text-center border-t border-border/50">
+      <div className="mx-auto max-w-2xl">
+        <h2 className="font-display text-4xl mb-4">Join the Inner Circle</h2>
+        <p className="text-muted-foreground mb-10">Receive editorial stories of our artisans and early access to limited collections.</p>
+        
+        <form className="flex flex-col sm:flex-row gap-4 border-b border-foreground/30 pb-2 max-w-md mx-auto focus-within:border-primary transition-colors">
+          <input 
+            type="email" 
+            placeholder="Your email address" 
+            className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground text-foreground px-2"
+          />
+          <button type="submit" className="text-sm uppercase tracking-widest font-medium hover:text-primary transition-colors">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+export function Footer() {
+  return (
+    <footer className="bg-background pt-24 pb-12 px-6 border-t border-border/50">
+      <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-16 mb-16">
+        <div className="md:col-span-1">
+          <Link to="/" className="font-display text-3xl font-bold tracking-tight text-foreground block mb-6">
+            KalaMitra
           </Link>
-          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-            Building the intelligence layer for global artisan commerce. Engineered with precision in India.
+          <p className="text-sm text-muted-foreground max-w-xs leading-relaxed italic font-serif">
+            "Art is not what you see, but what you make others see."
           </p>
-          <div className="mt-8 flex gap-4">
-            {[Instagram, Twitter, Linkedin, Github].map((Icon, i) => (
-              <a key={i} href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <Icon className="h-5 w-5" />
+          <div className="mt-8 flex gap-6">
+            {[Instagram, Twitter, Linkedin, Globe].map((Icon, i) => (
+              <a key={i} href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Icon className="w-5 h-5" />
               </a>
             ))}
           </div>
         </div>
+        
         {[
-          { title: "Product", items: ["AI Studio", "Marketplace", "Enterprise", "Pricing"] },
-          { title: "Resources", items: ["Documentation", "API Reference", "Blog", "Community"] },
-          { title: "Company", items: ["About", "Careers", "Legal", "Contact"] },
+          { title: "Explore", links: ["All Collections", "Meet Artisans", "New Arrivals", "Best Sellers"] },
+          { title: "Company", links: ["Our Story", "Sustainability", "Careers", "Contact Us"] },
+          { title: "Support", links: ["Track Order", "Shipping & Returns", "FAQ", "Privacy Policy"] }
         ].map((col) => (
           <div key={col.title}>
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-foreground">{col.title}</p>
-            <ul className="space-y-4 text-sm text-muted-foreground">
-              {col.items.map((item) => (
-                <li key={item}><a href="#" className="hover:text-foreground transition-colors">{item}</a></li>
+            <h4 className="text-xs font-bold uppercase tracking-widest text-foreground mb-6">{col.title}</h4>
+            <ul className="space-y-4">
+              {col.links.map(l => (
+                <li key={l}>
+                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">{l}</a>
+                </li>
               ))}
             </ul>
           </div>
         ))}
       </div>
-      <div className="mx-auto mt-20 max-w-7xl border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-muted-foreground">
-        <p>© 2026 Kalamitra Inc. All rights reserved.</p>
+      
+      <div className="mx-auto max-w-7xl border-t border-border/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground uppercase tracking-widest">
+        <p>&copy; {new Date().getFullYear()} KalaMitra. All rights reserved.</p>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-foreground">Privacy Policy</a>
-          <a href="#" className="hover:text-foreground">Terms of Service</a>
+          <span>Crafted with passion in India</span>
         </div>
       </div>
     </footer>
@@ -459,13 +443,17 @@ function Footer() {
 
 function Landing() {
   return (
-    <main className="min-h-screen bg-background selection:bg-primary/30">
+    <main className="min-h-screen bg-background selection:bg-primary/20 text-foreground">
       <Nav />
       <Hero />
+      <SocialTrust />
+      <CraftJourney />
+      <FeaturedCollections />
+      <Artisans />
+      <WhyKalaMitra />
       <Stats />
-      <Features />
-      <Stories />
-      <CTA />
+      <Testimonials />
+      <Newsletter />
       <Footer />
     </main>
   );
